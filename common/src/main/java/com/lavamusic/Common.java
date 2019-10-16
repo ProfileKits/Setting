@@ -17,6 +17,8 @@ public class Common {
     public String getName(){
         return "com.lavamusic.midi.MusicService";
     }
+    public static final String getLavaMusicAppKey(){return "null";}
+    public static final String getLavaMusicTestKey(){ return "ylrc0p2wyGMo50nOiEmdKVgjBQTmOokvNOQOUKIiU2A=";}
     public static final int jni_tim_none = 0;
     public static final int jni_tim_quit = 1;
     public static final int jni_tim_next = 2;
@@ -71,4 +73,5 @@ public class Common {
     public static final int msrv_cmd_write_new = 14;
     public static final int msrv_cmd_write_curr = 15;
     public static final int msrv_cmd_load_cfg = 17;
+
 }
