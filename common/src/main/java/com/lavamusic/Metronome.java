@@ -30,7 +30,7 @@ public class Metronome {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        for (int i = clicSize; i < periodSize; i++)
+        for (int i = clicSize; i < 2 * periodSize; i++)
             sig[i] = 0;
         return sig;
     }
@@ -41,7 +41,7 @@ public class Metronome {
         } else {
             periodSize = (int) ((60. * sampleRate) / bpm / note);
         }
-        double wStep = sampleRate;
+        double wStep = (2 * Math.PI * freq) / sampleRate;
         double[] sig = new double[periodSize];
         clicSize = (clicSize * sampleRate) / 1000;
         if (clicSize >= periodSize)

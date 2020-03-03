@@ -25,6 +25,39 @@ public class Midi {
     private byte[] shortToByteArray(short data) {
         return new byte[]{(byte) (data & 0xff), (byte) ((data >>> 8) & 0xff)};
     }
+    public void midiWrite(DataOutputStream outFile,boolean mono,long mySampleRate,String fileToWrite){
+        try {
+            long mySubChunk1Size = 16;
+            int myBitsPerSample = 16;
+            int myFormat = 1;
+            long myChannels = ((mono) ? 1 : 2);
+            long myByteRate = mySampleRate * myChannels * myBitsPerSample / 8;
+            int myBlockAlign = (int) (myChannels * myBitsPerSample / 8);
+            outFile.writeBytes("RIFF");
+            outFile.write(intToByteArray(0), 0, 4);
+            outFile.writeBytes("WAVE");
+            outFile.writeBytes("fmt ");
+            outFile.write(intToByteArray((int) mySubChunk1Size), 0, 4);
+            outFile.write(shortToByteArray((short) myFormat), 0, 2);
+            outFile.write(shortToByteArray((short) myChannels), 0, 2);
+            outFile.write(intToByteArray((int) mySampleRate), 0, 4);
+            outFile.write(intToByteArray((int) myByteRate), 0, 4);
+            outFile.write(shortToByteArray((short) myBlockAlign), 0, 2);
+            outFile.write(shortToByteArray((short) myBitsPerSample), 0, 2);
+            outFile.writeBytes("data");
+            outFile.write(intToByteArray(0), 0, 4);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    private byte[] intToByteArray(int i) {
+        byte[] b = new byte[4];
+        b[0] = (byte) (i & 0xFF);
+        b[1] = (byte) ((i >> 8) & 0xFF);
+        b[2] = (byte) ((i >> 16) & 0xFF);
+        b[3] = (byte) ((i >> 24) & 0xFF);
+        return b;
+    }
     public void midiFinish(String fileToWrite,long filesize,boolean mono,DataOutputStream outFile){
         try {
             outFile.flush();
@@ -45,6 +78,10 @@ public class Midi {
             return;
         }
         try {
+            raf.seek(04);
+            raf.write(intToByteArray((int) myChunkSize));
+            raf.seek(40);
+            raf.write(intToByteArray((int) myDataSize));
             raf.close();
         } catch (Exception e) {
             e.printStackTrace();
